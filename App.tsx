@@ -1,21 +1,77 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
+import { StatusBar } from "expo-status-bar";
+
+import { TodoItem } from "./models/todo.interface";
+
+import Header from "./components/UI/Header";
+import AddTodo from "./components/Todo/AddTodo";
+import TodoList from "./components/Todo/TodoList";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    const [todos, setTodos] = useState<TodoItem[]>([]);
+
+    const addTodo = (todo: TodoItem) => {
+        setTodos((todos: TodoItem[]): TodoItem[] => {
+            if ( !todos.find((t: TodoItem) => t.name.toLowerCase() === todo.name.toLowerCase()) ) {
+                return [...todos, { ...todo }];
+            } else {
+                return todos;
+            }
+        });
+    };
+
+    const updateTodo = (todo: TodoItem) => {
+        setTodos((todos: TodoItem[]): TodoItem[] => {
+            const newTodos = todos.map((t: TodoItem): TodoItem => {
+                if (t.id === todo.id) {
+                    return { ...todo };
+                } else {
+                    return { ...t };
+                }
+            });
+
+            return newTodos;
+        });
+    };
+
+    const deleteTodo = (id: number) => {
+        setTodos((todos: TodoItem[]) => todos.filter((todo: TodoItem) => todo.id !== id) );
+    };
+
+    return (
+        <View style={css.container}>
+            <Header />
+
+            <ScrollView style={css.pageScroll}>
+                <View style={css.todoBody}>
+                    <AddTodo addTodo={addTodo} />
+
+                    <TodoList
+                        todos={todos}
+                        updateTodo={updateTodo}
+                        deleteTodo={deleteTodo}
+                    />
+                </View>
+            </ScrollView>
+
+            <StatusBar style="auto" />
+        </View>
+    );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const css = StyleSheet.create({
+    container: {
+        backgroundColor: "#ffffff",
+    },
+    pageScroll: {
+        height: '88%'
+    },
+    todoBody: {
+        paddingTop: 20,
+        paddingHorizontal: 20
+    },
+    addTodo: {
+        marginBottom: 20,
+    },
 });
