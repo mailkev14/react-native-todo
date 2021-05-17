@@ -1,16 +1,18 @@
-import CheckBox from '@react-native-community/checkbox';
 import React from 'react'
 import { View, Text, StyleSheet, Button } from 'react-native';
+import { connect } from 'react-redux';
+// import CheckBox from '@react-native-community/checkbox';
 
-import { TodoItem, TodoCommonMethods } from '../../models/todo.interface';
+import { TodoItem } from '../../models/todo.interface';
+import { deleteTodo, updateTodo } from '../../redux/action/todo.action';
 
-interface ItemProps extends TodoCommonMethods {
+interface ItemProps {
     todo: TodoItem;
 }
 
-export default function TodoListItem ({ todo, updateTodo, deleteTodo }: ItemProps) {
+function TodoListItem ({ todo, update_todo, delete_todo }: ItemProps) {
     const setCompleted = (completed: boolean): void => {
-        updateTodo({
+        update_todo({
             ...todo,
             completed
         });
@@ -18,20 +20,32 @@ export default function TodoListItem ({ todo, updateTodo, deleteTodo }: ItemProp
 
     return (
         <View style={css.container}>
-            <CheckBox
+            {/* <CheckBox
                 style={css.chk}
                 value={todo.completed}
                 onValueChange={setCompleted}
-            />
-            <Text style={todo.completed ? {...css.text, ...css.completed}: css.text}>{todo.name}</Text>
+            /> */}
+            <Text
+                style={todo.completed ? {...css.text, ...css.completed} : {...css.text}}
+                onPress={() => setCompleted(!todo.completed)}
+            >{todo.name}</Text>
             <Button
-                onPress={() => deleteTodo(todo.id)}
+                onPress={() => delete_todo(todo.id)}
                 title="Remove"
                 color="#f00"
             />
         </View>
     );
 }
+
+function mapDispatchToProps(dispatch: Function) {
+    return {
+        update_todo: (todo: TodoItem) => dispatch(updateTodo(todo)),
+        delete_todo: (id: number) => dispatch(deleteTodo(id))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(TodoListItem);
 
 const css = StyleSheet.create({
     container: {

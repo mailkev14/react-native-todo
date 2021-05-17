@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import { connect } from 'react-redux';
+
 import { TodoItem } from '../../models/todo.interface';
+import { addTodo } from '../../redux/action/todo.action';
 
 interface AddProps {
-    addTodo: (todo: TodoItem) => void
+    add_todo: (todo: TodoItem) => void
 };
 
-export default function AddTodo({ addTodo }: AddProps) {
+function AddTodo({ add_todo }: AddProps) {
     const [task, setTask] = useState('');
 
     const invalidTodo = () => {
@@ -14,7 +17,7 @@ export default function AddTodo({ addTodo }: AddProps) {
     };
     
     const createTodo = () => {
-        addTodo({
+        add_todo({
             id: Math.round(Math.random() * 1000000000),
             name: task,
             completed: false
@@ -36,6 +39,14 @@ export default function AddTodo({ addTodo }: AddProps) {
         </View>
     );
 }
+
+function mapDispatchToProps (dispatch: Function) {
+    return {
+        add_todo: (todo: TodoItem) => dispatch(addTodo(todo))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(AddTodo);
 
 const css = StyleSheet.create({
     container: {
