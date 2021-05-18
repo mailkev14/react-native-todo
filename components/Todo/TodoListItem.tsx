@@ -8,6 +8,8 @@ import { deleteTodo, updateTodo } from '../../redux/action/todo.action';
 
 interface ItemProps {
     todo: TodoItem;
+    update_todo: (todo: TodoItem) => void;
+    delete_todo: (id: number) => void;
 }
 
 function TodoListItem ({ todo, update_todo, delete_todo }: ItemProps) {
@@ -54,7 +56,7 @@ const css = StyleSheet.create({
         justifyContent: "flex-start",
         alignItems: 'flex-start',
         paddingBottom: 10,
-        marginBottom: 10,
+        marginBottom: 15,
         borderBottomWidth: 1
     },
     chk: {
@@ -62,6 +64,7 @@ const css = StyleSheet.create({
     },
     text: {
         // width: '60%',
+        paddingTop: 5,
         flexGrow: .965,
         marginRight: 10
     },

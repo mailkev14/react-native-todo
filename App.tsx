@@ -6,7 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import { store } from './redux/store'
 
 import Header from "./components/UI/Header";
-import Todo from './components/Todo/index';
+import Todo from './components/Todo';
 
 export default function App() {
     return (
